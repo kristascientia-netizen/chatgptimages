@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 <title>Krista's Interactive Classroom</title>
 
 <style>
@@ -23,8 +24,6 @@ html, body {
 #player {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
   background: #000;
 }
@@ -35,8 +34,15 @@ iframe {
   top: 50%;
   width: 1088px;
   height: 720px;
-  border: none;
-  transform-origin: center center;
+  border: 0;
+  transform: translate(-50%, -50%);
+}
+
+/* Mobile only */
+@media (max-width: 768px) {
+  iframe {
+    transform-origin: center center;
+  }
 }
 </style>
 </head>
@@ -61,18 +67,26 @@ function fitVideo() {
   const w = window.innerWidth;
   const h = window.innerHeight;
 
+  // Desktop: preserve original dimensions
+  if (window.matchMedia("(min-width: 769px)").matches) {
+    frame.style.transform =
+      "translate(-50%, -50%)";
+    return;
+  }
+
+  // Mobile: slightly enlarge to reduce black gaps
+  const zoom = 1.08;
+
   if (h > w) {
-    const scaleX = h / 1088;
-    const scaleY = w / 720;
+    const scale = Math.min(h / 1088, w / 720) * zoom;
 
     frame.style.transform =
-      `translate(-50%, -50%) rotate(90deg) scale(${scaleX}, ${scaleY})`;
+      `translate(-50%, -50%) rotate(90deg) scale(${scale})`;
   } else {
-    const scaleX = w / 1088;
-    const scaleY = h / 720;
+    const scale = Math.min(w / 1088, h / 720) * zoom;
 
     frame.style.transform =
-      `translate(-50%, -50%) scale(${scaleX}, ${scaleY})`;
+      `translate(-50%, -50%) scale(${scale})`;
   }
 }
 
@@ -81,6 +95,9 @@ window.addEventListener("orientationchange", fitVideo);
 
 fitVideo();
 </script>
+
+<script src="https://app.lumi.education/api/v1/h5p/core/js/h5p-resizer.js"
+        charset="UTF-8"></script>
 
 </body>
 </html>
