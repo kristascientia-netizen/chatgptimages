@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
 <title>Krista's Interactive Classroom</title>
 
 <style>
@@ -14,7 +13,6 @@
 
 html, body {
   margin: 0;
-  padding: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -28,38 +26,14 @@ html, body {
   background: #000;
 }
 
-/* Desktop: preserve original Lumi layout */
-#video-window {
-  position: absolute;
-  width: 1088px;
-  height: 720px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  overflow: hidden;
-}
-
 iframe {
   position: absolute;
-  top: 0;
-  left: 0;
+  left: 50%;
+  top: 50%;
   width: 1088px !important;
   height: 720px !important;
   border: 0;
-}
-
-/* Mobile */
-@media (pointer: coarse) {
-  #video-window {
-    width: 1088px;
-    height: 612px;
-    overflow: hidden;
-  }
-  
-  iframe {
-    width: 1088px !important;
-    height: 720px !important;
-  }
+  transform-origin: center;
 }
 </style>
 </head>
@@ -67,52 +41,33 @@ iframe {
 <body>
 
 <div id="player">
-  <div id="video-window">
-    <iframe
-      src="https://app.lumi.education/api/v1/run/vbmriI/embed"
-      width="1088"
-      height="720"
-      frameborder="0"
-      allowfullscreen
-      allow="geolocation *; microphone *; camera *; midi *; encrypted-media *">
-    </iframe>
-  </div>
+  <iframe
+    id="lumi"
+    src="https://app.lumi.education/api/v1/run/vbmriI/embed"
+    width="1088"
+    height="720"
+    frameborder="0"
+    allowfullscreen
+    allow="geolocation *; microphone *; camera *; midi *; encrypted-media *">
+  </iframe>
 </div>
 
 <script>
-const windowBox = document.getElementById("video-window");
+const frame = document.getElementById("lumi");
 
 function fitVideo() {
-  const W = window.innerWidth;
-  const H = window.innerHeight;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
 
-  const mobile = window.matchMedia("(pointer: coarse)").matches;
-  const portrait = H > W;
+  if (h > w) {
+    const scale = Math.min(h / 1088, w / 720);
 
-  if (!mobile) {
-    windowBox.style.width = "1088px";
-    windowBox.style.height = "720px";
-    windowBox.style.transform =
-      "translate(-50%, -50%)";
-    return;
-  }
-
-  // Video dimensions, excluding the player controls
-  const videoW = 1088;
-  const videoH = 612;
-
-  windowBox.style.width = videoW + "px";
-  windowBox.style.height = videoH + "px";
-
-  if (portrait) {
-    const scale = Math.min(W / videoH, H / videoW);
-
-    windowBox.style.transform =
+    frame.style.transform =
       `translate(-50%, -50%) rotate(90deg) scale(${scale})`;
   } else {
-    const scale = Math.min(W / videoW, H / videoH);
+    const scale = Math.min(w / 1088, h / 720);
 
-    windowBox.style.transform =
+    frame.style.transform =
       `translate(-50%, -50%) scale(${scale})`;
   }
 }
@@ -123,10 +78,8 @@ window.addEventListener("orientationchange", fitVideo);
 fitVideo();
 </script>
 
-<script
-  src="https://app.lumi.education/api/v1/h5p/core/js/h5p-resizer.js"
-  charset="UTF-8">
-</script>
+<script src="https://app.lumi.education/api/v1/h5p/core/js/h5p-resizer.js"
+        charset="UTF-8"></script>
 
 </body>
 </html>
