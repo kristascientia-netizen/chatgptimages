@@ -4,15 +4,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 <title>Krista's Interactive Classroom</title>
 
 <style>
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 html, body {
-  margin: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -22,6 +24,8 @@ html, body {
 #player {
   position: fixed;
   inset: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: #000;
 }
@@ -30,10 +34,10 @@ iframe {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 1088px !important;
-  height: 720px !important;
+  width: 1088px;
+  height: 720px;
   border: 0;
-  transform-origin: center;
+  transform-origin: center center;
 }
 </style>
 </head>
@@ -46,7 +50,6 @@ iframe {
     src="https://app.lumi.education/api/v1/run/vbmriI/embed"
     width="1088"
     height="720"
-    frameborder="0"
     allowfullscreen
     allow="geolocation *; microphone *; camera *; midi *; encrypted-media *">
   </iframe>
@@ -60,15 +63,19 @@ function fitVideo() {
   const h = window.innerHeight;
 
   if (h > w) {
-    const scale = Math.min(h / 1088, w / 720);
+    // Portrait: rotate and stretch to fill
+    const scaleX = h / 1088;
+    const scaleY = w / 720;
 
     frame.style.transform =
-      `translate(-50%, -50%) rotate(90deg) scale(${scale})`;
+      `translate(-50%, -50%) rotate(90deg) scale(${scaleX}, ${scaleY})`;
   } else {
-    const scale = Math.min(w / 1088, h / 720);
+    // Landscape: stretch to fill
+    const scaleX = w / 1088;
+    const scaleY = h / 720;
 
     frame.style.transform =
-      `translate(-50%, -50%) scale(${scale})`;
+      `translate(-50%, -50%) scale(${scaleX}, ${scaleY})`;
   }
 }
 
