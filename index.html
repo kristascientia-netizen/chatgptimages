@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 <title>Krista's Interactive Classroom</title>
 
 <style>
@@ -30,51 +31,73 @@ html, body {
 }
 
 iframe {
-  display: block;
-  width: 1088px;
-  height: 720px;
-  border: 0;
-}
-
-/* Mobile landscape: fill the screen */
-@media (pointer: coarse) and (orientation: landscape) {
-  iframe {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: max(100vw, calc(100dvh * 1.5111)) !important;
-    height: max(calc(100vw / 1.5111), 100dvh) !important;
-    transform: translate(-50%, -50%);
-  }
-}
-
-/* Mobile portrait: rotate and fill the screen */
-@media (pointer: coarse) and (orientation: portrait) {
-  iframe {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: max(100dvh, calc(100vw * 1.5111)) !important;
-    height: max(calc(100dvh / 1.5111), 100vw) !important;
-    transform: translate(-50%, -50%) rotate(90deg);
-  }
+  position: absolute;
+  width: 1088px !important;
+  height: 720px !important;
+  border: none;
+  left: 50%;
+  top: 50%;
+  transform-origin: center center;
 }
 </style>
 </head>
 
 <body>
+
 <div id="player">
   <iframe
+    id="lumi"
     src="https://app.lumi.education/api/v1/run/vbmriI/embed"
     width="1088"
     height="720"
-    frameborder="0"
     allowfullscreen
     allow="geolocation *; microphone *; camera *; midi *; encrypted-media *">
   </iframe>
 </div>
 
-<script src="https://app.lumi.education/api/v1/h5p/core/js/h5p-resizer.js"
-        charset="UTF-8"></script>
+<script>
+const frame = document.getElementById("lumi");
+
+function fitVideo() {
+  const screenW = window.innerWidth;
+  const screenH = window.innerHeight;
+
+  const portrait = screenH > screenW;
+
+  let scale;
+
+  if (portrait) {
+    // Rotate video to landscape and fill portrait screen
+    scale = Math.max(
+      screenH / 1088,
+      screenW / 720
+    );
+
+    frame.style.transform =
+      `translate(-50%, -50%) rotate(90deg) scale(${scale})`;
+
+  } else {
+    // Landscape: fill the available screen
+    scale = Math.max(
+      screenW / 1088,
+      screenH / 720
+    );
+
+    frame.style.transform =
+      `translate(-50%, -50%) scale(${scale})`;
+  }
+}
+
+window.addEventListener("resize", fitVideo);
+window.addEventListener("orientationchange", fitVideo);
+
+fitVideo();
+</script>
+
+<script
+  src="https://app.lumi.education/api/v1/h5p/core/js/h5p-resizer.js"
+  charset="UTF-8">
+</script>
+
 </body>
 </html>
