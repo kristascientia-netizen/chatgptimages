@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+
+  <title>Krista's Interactive Classroom</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: #000;
+      overflow-x: hidden;
+    }
+
+    #wrapper {
+      width: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    #desktop {
+      width: 1088px;
+      height: 720px;
+      transform-origin: top left;
+    }
+
+    iframe {
+      display: block;
+      width: 1088px;
+      height: 720px;
+      border: 0;
+    }
+
+    /* Mobile layout */
+    @media (max-width: 767px) {
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      #wrapper {
+        width: 100vw;
+        height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #desktop {
+        width: 1088px;
+        height: 720px;
+        flex: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="wrapper">
+    <div id="desktop">
+      <iframe
+        src="https://app.lumi.education/api/v1/run/vbmriI/embed"
+        width="1088"
+        height="720"
+        frameborder="0"
+        allowfullscreen="allowfullscreen"
+        allow="geolocation *; microphone *; camera *; midi *; encrypted-media *">
+      </iframe>
+    </div>
+  </div>
+
+  <script src="https://app.lumi.education/api/v1/h5p/core/js/h5p-resizer.js"
+    charset="UTF-8"></script>
+
+  <script>
+    const desktop = document.getElementById("desktop");
+    const wrapper = document.getElementById("wrapper");
+
+    function resizeLayout() {
+      const mobile = window.innerWidth <= 767;
+
+      if (mobile) {
+        const scale = Math.min(
+          window.innerWidth / 1088,
+          window.innerHeight / 720
+        );
+
+        desktop.style.transform = `scale(${scale})`;
+
+        const width = 1088 * scale;
+        const height = 720 * scale;
+
+        desktop.style.position = "absolute";
+        desktop.style.left = `${(window.innerWidth - width) / 2}px`;
+        desktop.style.top = `${(window.innerHeight - height) / 2}px`;
+
+        wrapper.style.height = "100dvh";
+      } else {
+        desktop.style.position = "relative";
+        desktop.style.left = "0";
+        desktop.style.top = "0";
+        desktop.style.transform = "none";
+        wrapper.style.height = "720px";
+      }
+    }
+
+    window.addEventListener("resize", resizeLayout);
+    window.addEventListener("orientationchange", resizeLayout);
+
+    resizeLayout();
+  </script>
+
+</body>
+</html>
