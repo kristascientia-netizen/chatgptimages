@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Krista's Interactive Classroom</title>
 
 <style>
@@ -13,6 +13,7 @@
 
 html, body {
   margin: 0;
+  padding: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -22,9 +23,8 @@ html, body {
 #player {
   position: fixed;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: #000;
 }
@@ -36,22 +36,26 @@ iframe {
   border: 0;
 }
 
-/* Mobile: landscape phone */
+/* Mobile landscape: fill the screen */
 @media (pointer: coarse) and (orientation: landscape) {
   iframe {
-    width: min(100vw, calc(100dvh * 1.5111)) !important;
-    height: min(100dvh, calc(100vw / 1.5111)) !important;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100vw, calc(100dvh * 1.5111)) !important;
+    height: max(calc(100vw / 1.5111), 100dvh) !important;
+    transform: translate(-50%, -50%);
   }
 }
 
-/* Mobile: portrait phone — rotate the video */
+/* Mobile portrait: rotate and fill the screen */
 @media (pointer: coarse) and (orientation: portrait) {
   iframe {
     position: absolute;
-    width: min(100dvh, calc(100vw * 1.5111)) !important;
-    height: min(100vw, calc(100dvh / 1.5111)) !important;
     left: 50%;
     top: 50%;
+    width: max(100dvh, calc(100vw * 1.5111)) !important;
+    height: max(calc(100dvh / 1.5111), 100vw) !important;
     transform: translate(-50%, -50%) rotate(90deg);
   }
 }
