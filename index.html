@@ -24,20 +24,42 @@ html, body {
 #player {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
   background: #000;
 }
 
-iframe {
+/* Desktop: preserve original Lumi layout */
+#video-window {
   position: absolute;
-  width: 1088px !important;
-  height: 720px !important;
-  border: none;
+  width: 1088px;
+  height: 720px;
   left: 50%;
   top: 50%;
-  transform-origin: center center;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1088px !important;
+  height: 720px !important;
+  border: 0;
+}
+
+/* Mobile */
+@media (pointer: coarse) {
+  #video-window {
+    width: 1088px;
+    height: 612px;
+    overflow: hidden;
+  }
+  
+  iframe {
+    width: 1088px !important;
+    height: 720px !important;
+  }
 }
 </style>
 </head>
@@ -45,45 +67,52 @@ iframe {
 <body>
 
 <div id="player">
-  <iframe
-    id="lumi"
-    src="https://app.lumi.education/api/v1/run/vbmriI/embed"
-    width="1088"
-    height="720"
-    allowfullscreen
-    allow="geolocation *; microphone *; camera *; midi *; encrypted-media *">
-  </iframe>
+  <div id="video-window">
+    <iframe
+      src="https://app.lumi.education/api/v1/run/vbmriI/embed"
+      width="1088"
+      height="720"
+      frameborder="0"
+      allowfullscreen
+      allow="geolocation *; microphone *; camera *; midi *; encrypted-media *">
+    </iframe>
+  </div>
 </div>
 
 <script>
-const frame = document.getElementById("lumi");
+const windowBox = document.getElementById("video-window");
 
 function fitVideo() {
-  const screenW = window.innerWidth;
-  const screenH = window.innerHeight;
+  const W = window.innerWidth;
+  const H = window.innerHeight;
 
-  const portrait = screenH > screenW;
+  const mobile = window.matchMedia("(pointer: coarse)").matches;
+  const portrait = H > W;
 
-  let scale;
+  if (!mobile) {
+    windowBox.style.width = "1088px";
+    windowBox.style.height = "720px";
+    windowBox.style.transform =
+      "translate(-50%, -50%)";
+    return;
+  }
+
+  // Video dimensions, excluding the player controls
+  const videoW = 1088;
+  const videoH = 612;
+
+  windowBox.style.width = videoW + "px";
+  windowBox.style.height = videoH + "px";
 
   if (portrait) {
-    // Rotate video to landscape and fill portrait screen
-    scale = Math.max(
-      screenH / 1088,
-      screenW / 720
-    );
+    const scale = Math.min(W / videoH, H / videoW);
 
-    frame.style.transform =
+    windowBox.style.transform =
       `translate(-50%, -50%) rotate(90deg) scale(${scale})`;
-
   } else {
-    // Landscape: fill the available screen
-    scale = Math.max(
-      screenW / 1088,
-      screenH / 720
-    );
+    const scale = Math.min(W / videoW, H / videoH);
 
-    frame.style.transform =
+    windowBox.style.transform =
       `translate(-50%, -50%) scale(${scale})`;
   }
 }
