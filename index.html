@@ -62,14 +62,14 @@ function fitVideo() {
   const h = window.innerHeight;
 
   if (h > w) {
-    const scaleX = h / 1088;
-    const scaleY = w / 720;
+    const scaleX = (h / 1088) * 1.04;
+    const scaleY = (w / 720) * 1.04;
 
     frame.style.transform =
       `translate(-50%, -50%) rotate(90deg) scale(${scaleX}, ${scaleY})`;
   } else {
-    const scaleX = w / 1088;
-    const scaleY = h / 720;
+    const scaleX = (w / 1088) * 1.04;
+    const scaleY = (h / 720) * 1.04;
 
     frame.style.transform =
       `translate(-50%, -50%) scale(${scaleX}, ${scaleY})`;
@@ -81,6 +81,5 @@ window.addEventListener("orientationchange", fitVideo);
 
 fitVideo();
 </script>
-
 </body>
 </html>
