@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
 <title>Krista's Interactive Classroom</title>
 
 <style>
@@ -36,7 +35,7 @@ iframe {
   top: 50%;
   width: 1088px;
   height: 720px;
-  border: 0;
+  border: none;
   transform-origin: center center;
 }
 </style>
@@ -63,14 +62,12 @@ function fitVideo() {
   const h = window.innerHeight;
 
   if (h > w) {
-    // Portrait: rotate and stretch to fill
     const scaleX = h / 1088;
     const scaleY = w / 720;
 
     frame.style.transform =
       `translate(-50%, -50%) rotate(90deg) scale(${scaleX}, ${scaleY})`;
   } else {
-    // Landscape: stretch to fill
     const scaleX = w / 1088;
     const scaleY = h / 720;
 
@@ -84,9 +81,6 @@ window.addEventListener("orientationchange", fitVideo);
 
 fitVideo();
 </script>
-
-<script src="https://app.lumi.education/api/v1/h5p/core/js/h5p-resizer.js"
-        charset="UTF-8"></script>
 
 </body>
 </html>
